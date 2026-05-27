@@ -5,330 +5,94 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Crowney — Staff Portal</title>
 <style>
-  /* ── CONFIG: fill these in ── */
-  /* See bottom of file for JS constants */
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg: #0e0f11;
-    --surface: #16181c;
-    --surface2: #1e2026;
-    --border: rgba(255,255,255,0.08);
-    --border2: rgba(255,255,255,0.14);
-    --text: #f0f1f3;
-    --muted: #8b8f9a;
-    --accent: #5865F2;
-    --accent-hover: #4752c4;
-    --green: #3ba55d;
-    --red: #ed4245;
-    --amber: #faa61a;
-    --radius: 12px;
-    --radius-sm: 8px;
+    --bg: #0e0f11; --surface: #16181c; --surface2: #1e2026;
+    --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+    --text: #f0f1f3; --muted: #8b8f9a; --accent: #5865F2; --accent-hover: #4752c4;
+    --green: #3ba55d; --red: #ed4245; --amber: #faa61a;
+    --radius: 12px; --radius-sm: 8px;
   }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-  }
-
-  .portal {
-    width: 100%;
-    max-width: 420px;
-  }
-
-  /* ── LOGO ── */
-  .logo {
-    text-align: center;
-    margin-bottom: 32px;
-  }
-  .logo-mark {
-    width: 56px; height: 56px;
-    background: linear-gradient(135deg, #5865F2, #9b59b6);
-    border-radius: 16px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 26px;
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: -1px;
-    margin-bottom: 12px;
-  }
-  .logo h1 {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-  }
-  .logo p {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 4px;
-  }
-
-  /* ── CARD ── */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 28px;
-  }
-
-  /* ── LOGIN VIEW ── */
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .portal { width: 100%; max-width: 420px; }
+  .logo { text-align: center; margin-bottom: 32px; }
+  .logo-mark { width: 56px; height: 56px; background: linear-gradient(135deg, #5865F2, #9b59b6); border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 700; color: #fff; letter-spacing: -1px; margin-bottom: 12px; }
+  .logo h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  .logo p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
   .login-view { text-align: center; }
-  .login-icon {
-    width: 72px; height: 72px;
-    background: var(--surface2);
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-    border: 1px solid var(--border);
-  }
+  .login-icon { width: 72px; height: 72px; background: var(--surface2); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; border: 1px solid var(--border); }
   .login-icon svg { width: 36px; height: 36px; fill: var(--accent); }
   .login-view h2 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
   .login-view p { font-size: 14px; color: var(--muted); line-height: 1.5; margin-bottom: 24px; }
-
-  .btn-discord {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    padding: 13px 24px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-    justify-content: center;
-    transition: background 0.15s, transform 0.1s;
-    text-decoration: none;
-  }
+  .btn-discord { display: inline-flex; align-items: center; gap: 10px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); padding: 13px 24px; font-size: 15px; font-weight: 600; cursor: pointer; width: 100%; justify-content: center; transition: background 0.15s, transform 0.1s; text-decoration: none; }
   .btn-discord:hover { background: var(--accent-hover); }
   .btn-discord:active { transform: scale(0.98); }
   .btn-discord svg { width: 22px; height: 22px; fill: #fff; flex-shrink: 0; }
-
-  /* ── LOADING ── */
   .loading-view { text-align: center; padding: 12px 0; }
-  .spinner {
-    width: 40px; height: 40px;
-    border: 3px solid var(--border2);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin: 0 auto 16px;
-  }
+  .spinner { width: 40px; height: 40px; border: 3px solid var(--border2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .loading-view p { font-size: 14px; color: var(--muted); }
-
-  /* ── ERROR VIEW ── */
   .error-view { text-align: center; }
-  .error-icon {
-    width: 56px; height: 56px;
-    background: rgba(237,66,69,0.15);
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 16px;
-  }
+  .error-icon { width: 56px; height: 56px; background: rgba(237,66,69,0.15); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px; }
   .error-icon svg { width: 28px; height: 28px; stroke: var(--red); fill: none; stroke-width: 2; stroke-linecap: round; }
   .error-view h2 { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
   .error-view p { font-size: 14px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
-  .btn-retry {
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    color: var(--text);
-    border-radius: var(--radius-sm);
-    padding: 11px 20px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
+  .btn-retry { background: var(--surface2); border: 1px solid var(--border2); color: var(--text); border-radius: var(--radius-sm); padding: 11px 20px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
   .btn-retry:hover { background: var(--border); }
-
-  /* ── DASHBOARD ── */
-  .dashboard-view {}
-  .staff-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 24px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--border);
-  }
-  .avatar {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    border: 2px solid var(--accent);
-    object-fit: cover;
-  }
-  .avatar-placeholder {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    background: var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 18px;
-    color: #fff;
-    flex-shrink: 0;
-  }
+  .staff-header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .avatar { width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
+  .avatar-placeholder { width: 48px; height: 48px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: #fff; flex-shrink: 0; }
   .staff-info { flex: 1; min-width: 0; }
   .staff-name { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .staff-tag { font-size: 12px; color: var(--muted); margin-top: 2px; }
-  .badge-staff {
-    background: rgba(88,101,242,0.2);
-    color: #a0acff;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 20px;
-    border: 1px solid rgba(88,101,242,0.35);
-    white-space: nowrap;
-  }
-
-  .section-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
-
-  .quick-links {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  .quick-link {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 14px;
-    cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
-    text-decoration: none;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+  .badge-staff { background: rgba(88,101,242,0.2); color: #a0acff; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(88,101,242,0.35); white-space: nowrap; }
+  .section-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 12px; }
+  .quick-links { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .quick-link { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; cursor: pointer; transition: border-color 0.15s, background 0.15s; text-decoration: none; color: var(--text); display: flex; align-items: center; gap: 10px; }
   .quick-link:hover { border-color: var(--border2); background: #23262d; }
-  .quick-link-icon {
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
+  .quick-link-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .quick-link-icon svg { width: 16px; height: 16px; }
   .quick-link-text { font-size: 13px; font-weight: 500; }
-
-  .status-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-  }
+  .status-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
   .status-row:last-child { border-bottom: none; }
   .status-label { color: var(--muted); }
   .status-val { font-weight: 500; display: flex; align-items: center; gap: 6px; }
   .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .dot-green { background: var(--green); }
-
-  .logout-row {
-    margin-top: 20px;
-    text-align: center;
-  }
-  .btn-logout {
-    background: none;
-    border: 1px solid var(--border2);
-    color: var(--muted);
-    border-radius: var(--radius-sm);
-    padding: 9px 18px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: color 0.15s, border-color 0.15s;
-  }
+  .logout-row { margin-top: 20px; text-align: center; }
+  .btn-logout { background: none; border: 1px solid var(--border2); color: var(--muted); border-radius: var(--radius-sm); padding: 9px 18px; font-size: 13px; cursor: pointer; transition: color 0.15s, border-color 0.15s; }
   .btn-logout:hover { color: var(--red); border-color: rgba(237,66,69,0.4); }
-
-  /* ── FOOTER ── */
-  .footer {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 12px;
-    color: var(--muted);
-  }
+  .footer { text-align: center; margin-top: 20px; font-size: 12px; color: var(--muted); }
 </style>
 </head>
 <body>
-
 <div class="portal">
   <div class="logo">
     <div class="logo-mark">C</div>
     <h1>Crowney</h1>
     <p>Staff Portal</p>
   </div>
-
-  <div class="card" id="card">
-    <!-- Views injected by JS -->
-  </div>
-
+  <div class="card" id="card"></div>
   <div class="footer">Crowney Staff Portal &nbsp;·&nbsp; Restricted access</div>
 </div>
-
 <script>
-/* ════════════════════════════════════════════════
-   ⚙️  CONFIGURE THESE VALUES
-   ════════════════════════════════════════════════ */
 const CONFIG = {
-  // Your Discord application client ID
-  // Create one at https://discord.com/developers/applications
   CLIENT_ID: "1509110066132029621",
-
-  // Your support server (guild) ID
-  // Right-click the server icon → Copy Server ID (enable Developer Mode first)
   GUILD_ID: "1504496900089577664",
-
-  // The role ID that grants staff access
-  // Right-click the role in Server Settings → Copy Role ID
   REQUIRED_ROLE_ID: "1508738001973280808",
-
-  // The redirect URI — must EXACTLY match what you set in the Discord app OAuth2 settings
-  // Set it to wherever this file is hosted, e.g. https://yourdomain.com/staff-portal.html
   REDIRECT_URI: window.location.href.split("?")[0].split("#")[0],
-
-  // Quick links shown on the dashboard (edit freely)
   QUICK_LINKS: [
-    { label: "Support Server",  href: "https://discord.gg/jPhgrnYa2r",   color: "#5865F2", icon: "discord" },
-    { label: "Mod Logs",        href: "#",                               color: "#3ba55d", icon: "list" },
-    { label: "Staff Handbook",  href: "#",                               color: "#faa61a", icon: "book" },
-    { label: "Report Issue",    href: "#",                               color: "#ed4245", icon: "flag" },
+    { label: "Support Server", href: "https://discord.gg/jPhgrnYa2r", color: "#5865F2", icon: "discord" },
+    { label: "Mod Logs",       href: "#",                              color: "#3ba55d", icon: "list"    },
+    { label: "Staff Handbook", href: "#",                              color: "#faa61a", icon: "book"    },
+    { label: "Report Issue",   href: "#",                              color: "#ed4245", icon: "flag"    },
   ],
 };
-/* ════════════════════════════════════════════════ */
 
 const DISCORD_API = "https://discord.com/api/v10";
 const card = document.getElementById("card");
 
-/* ── ICON HELPERS ── */
 const icons = {
   discord: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>`,
   list: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`,
@@ -336,17 +100,14 @@ const icons = {
   flag: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>`,
 };
 
-/* ── VIEWS ── */
 function showLogin() {
   const url = `https://discord.com/oauth2/authorize?client_id=${CONFIG.CLIENT_ID}&redirect_uri=${encodeURIComponent(CONFIG.REDIRECT_URI)}&response_type=token&scope=identify%20guilds.members.read&prompt=none`;
   card.innerHTML = `
     <div class="login-view">
-      <div class="login-icon">
-        <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-      </div>
+      <div class="login-icon"><svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg></div>
       <h2>Staff access only</h2>
       <p>Sign in with your Discord account. You must have the required staff role in the support server to proceed.</p>
-      <a class="btn-discord" href="${url}">
+      <a class="btn-discord" href="${url}" target="_top">
         <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
         Continue with Discord
       </a>
@@ -360,9 +121,7 @@ function showLoading(msg = "Verifying your account…") {
 function showError(title, detail, retry = true) {
   card.innerHTML = `
     <div class="error-view">
-      <div class="error-icon">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      </div>
+      <div class="error-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
       <h2>${title}</h2>
       <p>${detail}</p>
       ${retry ? `<button class="btn-retry" onclick="clearAndLogin()">Try again</button>` : ""}
@@ -370,145 +129,79 @@ function showError(title, detail, retry = true) {
 }
 
 function showDashboard(user, member) {
-  const avatarUrl = user.avatar
-    ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
-    : null;
+  const avatarUrl = user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128` : null;
   const initials = (user.global_name || user.username).slice(0, 2).toUpperCase();
   const displayName = user.global_name || user.username;
   const tag = user.discriminator && user.discriminator !== "0" ? `#${user.discriminator}` : "";
   const joinedAt = new Date(member.joined_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
-
   const linksHtml = CONFIG.QUICK_LINKS.map(l => `
     <a class="quick-link" href="${l.href}" target="_blank" rel="noopener">
-      <div class="quick-link-icon" style="background: ${l.color}22; color: ${l.color}">
-        ${icons[l.icon] || ""}
-      </div>
+      <div class="quick-link-icon" style="background:${l.color}22;color:${l.color}">${icons[l.icon] || ""}</div>
       <span class="quick-link-text">${l.label}</span>
     </a>`).join("");
-
   card.innerHTML = `
     <div class="dashboard-view">
       <div class="staff-header">
-        ${avatarUrl
-          ? `<img class="avatar" src="${avatarUrl}" alt="${displayName}">`
-          : `<div class="avatar-placeholder">${initials}</div>`}
+        ${avatarUrl ? `<img class="avatar" src="${avatarUrl}" alt="${displayName}">` : `<div class="avatar-placeholder">${initials}</div>`}
         <div class="staff-info">
           <div class="staff-name">${displayName}</div>
           <div class="staff-tag">${tag || "Discord user"}</div>
         </div>
         <span class="badge-staff">✓ Staff</span>
       </div>
-
       <p class="section-label">Quick links</p>
       <div class="quick-links">${linksHtml}</div>
-
       <p class="section-label">Account status</p>
-      <div class="status-row">
-        <span class="status-label">Role verified</span>
-        <span class="status-val"><span class="dot dot-green"></span> Yes</span>
-      </div>
-      <div class="status-row">
-        <span class="status-label">Server joined</span>
-        <span class="status-val">${joinedAt}</span>
-      </div>
-      <div class="status-row">
-        <span class="status-label">Discord ID</span>
-        <span class="status-val" style="font-size:12px; font-family: monospace; color: var(--muted)">${user.id}</span>
-      </div>
-
-      <div class="logout-row">
-        <button class="btn-logout" onclick="logout()">Sign out</button>
-      </div>
+      <div class="status-row"><span class="status-label">Role verified</span><span class="status-val"><span class="dot dot-green"></span> Yes</span></div>
+      <div class="status-row"><span class="status-label">Server joined</span><span class="status-val">${joinedAt}</span></div>
+      <div class="status-row"><span class="status-label">Discord ID</span><span class="status-val" style="font-size:12px;font-family:monospace;color:var(--muted)">${user.id}</span></div>
+      <div class="logout-row"><button class="btn-logout" onclick="logout()">Sign out</button></div>
     </div>`;
 }
 
-/* ── AUTH FLOW ── */
 function getTokenFromHash() {
   const params = new URLSearchParams(window.location.hash.slice(1));
-  return { token: params.get("access_token"), type: params.get("token_type") };
+  return { token: params.get("access_token") };
 }
-
-function storeToken(token) {
-  sessionStorage.setItem("crowney_token", token);
-}
-
-function getStoredToken() {
-  return sessionStorage.getItem("crowney_token");
-}
-
-function clearAndLogin() {
-  sessionStorage.removeItem("crowney_token");
-  window.location.hash = "";
-  showLogin();
-}
-
-function logout() {
-  clearAndLogin();
-}
+function storeToken(t) { sessionStorage.setItem("crowney_token", t); }
+function getStoredToken() { return sessionStorage.getItem("crowney_token"); }
+function clearAndLogin() { sessionStorage.removeItem("crowney_token"); window.location.hash = ""; showLogin(); }
+function logout() { clearAndLogin(); }
 
 async function discordFetch(endpoint, token) {
-  const res = await fetch(DISCORD_API + endpoint, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+  const res = await fetch(DISCORD_API + endpoint, { headers: { Authorization: `Bearer ${token}` } });
   if (!res.ok) throw Object.assign(new Error("Discord API error"), { status: res.status });
   return res.json();
 }
 
 async function verifyAndShow(token) {
   showLoading("Fetching your Discord profile…");
-
   let user;
-  try {
-    user = await discordFetch("/users/@me", token);
-  } catch (e) {
-    showError("Authentication failed", "Could not retrieve your Discord account. Your session may have expired.", true);
-    return;
-  }
+  try { user = await discordFetch("/users/@me", token); }
+  catch { showError("Authentication failed", "Could not retrieve your Discord account. Your session may have expired."); return; }
 
   showLoading("Checking server roles…");
-
   let member;
-  try {
-    member = await discordFetch(`/users/@me/guilds/${CONFIG.GUILD_ID}/member`, token);
-  } catch (e) {
-    if (e.status === 404) {
-      showError("Not in server", `You are not a member of the support server. Join first, then try again.`, true);
-    } else {
-      showError("Role check failed", "Could not verify your server membership. Make sure you authorised the required scopes.", true);
-    }
+  try { member = await discordFetch(`/users/@me/guilds/${CONFIG.GUILD_ID}/member`, token); }
+  catch (e) {
+    if (e.status === 404) showError("Not in server", "You are not a member of the support server. Join first, then try again.");
+    else showError("Role check failed", "Could not verify your server membership. Make sure you authorised the required scopes.");
     return;
   }
 
   if (!member.roles.includes(CONFIG.REQUIRED_ROLE_ID)) {
-    showError(
-      "Access denied",
-      "Your Discord account does not have the required staff role in the support server. Contact an admin if you think this is a mistake.",
-      true
-    );
     sessionStorage.removeItem("crowney_token");
+    showError("Access denied", "Your Discord account does not have the required staff role. Contact an admin if you think this is a mistake.");
     return;
   }
-
   showDashboard(user, member);
 }
 
-/* ── INIT ── */
 (async () => {
   const { token } = getTokenFromHash();
-
-  if (token) {
-    window.history.replaceState(null, "", window.location.pathname);
-    storeToken(token);
-    await verifyAndShow(token);
-    return;
-  }
-
+  if (token) { window.history.replaceState(null, "", window.location.pathname); storeToken(token); await verifyAndShow(token); return; }
   const stored = getStoredToken();
-  if (stored) {
-    await verifyAndShow(stored);
-    return;
-  }
-
+  if (stored) { await verifyAndShow(stored); return; }
   showLogin();
 })();
 </script>
